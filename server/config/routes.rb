@@ -2,7 +2,7 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       # User & Authentication Routes
-      resources :users, only: [:show, :update, :destroy, :create] do
+      resources :users, only: [:show, :update, :destroy] do
         resources :addresses, only: [:index, :create, :update, :destroy]
         resources :carts, only: [:index, :create] do
           resources :cart_items, only: [:create, :update, :destroy]
