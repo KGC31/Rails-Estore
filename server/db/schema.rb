@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2024_09_24_084253) do
+ActiveRecord::Schema[7.1].define(version: 2024_09_26_071152) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
   enable_extension "plpgsql"
@@ -38,6 +38,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_084253) do
     t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["cart_id", "product_id"], name: "index_cart_items_on_cart_id_and_product_id", unique: true
     t.index ["cart_id"], name: "index_cart_items_on_cart_id"
     t.index ["product_id"], name: "index_cart_items_on_product_id"
   end
@@ -63,6 +64,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_084253) do
     t.string "option", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["order_id", "product_id"], name: "index_order_items_on_order_id_and_product_id", unique: true
     t.index ["order_id"], name: "index_order_items_on_order_id"
     t.index ["product_id"], name: "index_order_items_on_product_id"
   end
@@ -81,13 +83,13 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_084253) do
   end
 
   create_table "payments", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
-    t.uuid "user_id", null: false
     t.string "payment_method", default: "credit", null: false
     t.string "status", default: "pending", null: false
     t.decimal "amount", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_payments_on_user_id"
+    t.uuid "order_id"
+    t.index ["order_id"], name: "index_payments_on_order_id"
   end
 
   create_table "products", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -121,7 +123,7 @@ ActiveRecord::Schema[7.1].define(version: 2024_09_24_084253) do
   add_foreign_key "orders", "addresses"
   add_foreign_key "orders", "payments"
   add_foreign_key "orders", "users"
-  add_foreign_key "payments", "users"
+  add_foreign_key "payments", "orders"
   add_foreign_key "products", "brands"
   add_foreign_key "products", "categories"
 end

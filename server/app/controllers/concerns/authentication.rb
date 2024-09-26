@@ -12,18 +12,22 @@ module Authentication
         @current_user = User.find(@current_user_id)
       rescue JWT::DecodeError
         render json: { error: 'Invalid token' }, status: :unauthorized
+        return
       rescue ActiveRecord::RecordNotFound
         render json: { error: 'User not found' }, status: :unauthorized
+        return
       end
     else
       render json: { error: 'Token missing' }, status: :unauthorized
+      return
     end
   end
 
   def authenticate_admin
     authenticate_user
-    if @current_user&.role != 'admin'
+    if @currnet_user && @current_user&.role != 'admin'
       render json: { error: 'Access denied: Admins only' }, status: :forbidden
+      return
     end
   end
 end

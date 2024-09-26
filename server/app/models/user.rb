@@ -2,7 +2,6 @@ class User < ApplicationRecord
   has_one :cart, class_name: "Cart", dependent: :destroy
   has_many :addresses, class_name: "Address", dependent: :destroy
   has_many :orders, class_name: "Order", dependent: :destroy
-  has_many :payments, class_name: "Payment", dependent: :destroy
 
   after_create :create_cart
 
