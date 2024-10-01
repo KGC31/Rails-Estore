@@ -2,8 +2,9 @@ class Product < ApplicationRecord
   belongs_to :brand
   belongs_to :category
 
-  has_many :cart_items, class_name: "CartItem"
-  has_many :order_items, class_name: "OrderItem"
+  has_many :cart_items, dependent: :destroy
+  has_many :order_items, dependent: :destroy
 
   validates :name, uniqueness: { case_sensitive: false, message: "Product has already existed" }
+  validates :price, presence: true, numericality: { greater_than_or_equal_to: 0 }
 end

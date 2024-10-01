@@ -1,4 +1,4 @@
 class Payment < ApplicationRecord
-  belongs_to :user, depenedent: :destroy
-  belongs_to :order, dependent: :destroy
+  belongs_to :user
+  belongs_to :order
 end

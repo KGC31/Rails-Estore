@@ -1,7 +1,8 @@
 class User < ApplicationRecord
-  has_one :cart, class_name: "Cart", dependent: :destroy
-  has_many :addresses, class_name: "Address", dependent: :destroy
-  has_many :orders, class_name: "Order", dependent: :destroy
+  has_one :cart, dependent: :destroy
+  has_many :addresses, dependent: :destroy
+  has_many :orders, dependent: :destroy
+  has_one :refresh_token, dependent: :destroy
 
   after_create :create_cart
 
@@ -19,4 +20,14 @@ class User < ApplicationRecord
 
   # Validate the role
   validates :role, inclusion: { in: ROLES, message: "%{value} is not a valid role" }
+
+  private
+
+  def admin?
+    role == 'admin'
+  end
+
+  def user?
+    role == 'user'
+  end
 end
